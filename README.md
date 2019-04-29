@@ -1,6 +1,5 @@
-# cli-client
+# cli-client [![Build Status](https://travis-ci.org/random-development/cli-client.svg?branch=master)](https://travis-ci.org/random-development/cli-client)
 Program automatycznie przeszukujący monitorowane zasoby i pomiary w celu wyświetlenia (co pewien czas odświeżonych wyników dla) top 10 najbardziej obciążonych maszyn.
-
 
 # Możliwości cli-client
 - dostęp do API gateway oparty na mikrousłudze uwierzytelniającej [FIXME: gatharing data task]
