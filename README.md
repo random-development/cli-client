@@ -45,7 +45,7 @@ Uruchomienie narzędzia
 ./main.py --endpoint "<endpoint_url>" --username "<username>" --password "<password>" 
 ```
 
-# Testy jednostkowe
+# Testy jednostkowe (+ linter)
 
 ## Uruchomienie testów w kontenerze
 

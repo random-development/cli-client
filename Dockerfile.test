@@ -2,5 +2,5 @@ FROM python:3.7
 
 ADD . /cli_client/
 RUN pip install /cli_client/
-RUN pip install pytest
-CMD python -m pytest /cli_client/tests/ -v
+RUN pip install pytest pylint
+CMD python -m pytest /cli_client/tests/ -v && pylint /cli_client/cli_client/ && pylint /cli_client/tests/*.py
