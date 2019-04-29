@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#pylint: disable=missing-docstring
 
 import unittest
 from unittest import mock
@@ -10,10 +11,16 @@ class TestInit(unittest.TestCase):
     test_password = "test password"
 
     def test_get_args_proper_args(self):
-        parser = cli_client.get_args(["-e", self.test_endpoint, "-u", self.test_username, "-p", self.test_password])
+        parser = cli_client.get_args([
+            "-e",
+            self.test_endpoint,
+            "-u",
+            self.test_username,
+            "-p",
+            self.test_password])
         self.assertTrue(parser.endpoint, self.test_endpoint)
-    
+
     @mock.patch("sys.exit")
     def test_get_args_incomplete_args(self, sys_exit_mock):
-        parser = cli_client.get_args(["-e", self.test_endpoint])
+        _ = cli_client.get_args(["-e", self.test_endpoint])
         sys_exit_mock.assert_called_once_with(2)
