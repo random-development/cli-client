@@ -10,7 +10,25 @@ Program automatycznie przeszukujący monitorowane zasoby i pomiary w celu wyświ
 
 # Instalacja i uruchomienie cli-client
 
-## Instalacja manualna
+## Uruchomnienie aplikacji w kontenerze
+
+Checkout źródeł
+```bash
+git clone git@github.com:random-development/cli-client.git
+```
+
+Zbudowanie obrazu
+```bash
+cd cli-client
+sudo docker build -t python-cli-client .
+```
+
+Uruchomienie kontenera
+```bash
+sudo docker run -e ENDPOINT="<endpoint_url>" -e USERNAME="<username>" -e PASSWORD="<password>" python-cli-client
+```
+
+## Uruchomnienie aplikacji manualne
 
 Checkout źródeł
 ```bash
@@ -24,8 +42,35 @@ pip install .
 ```
 
 Uruchomienie narzędzia
+```bash
+./main.py --endpoint "<endpoint_url>" --username "<username>" --password "<password>" 
 ```
-./main.py
+
+# Testy jednostkowe
+
+## Uruchomienie testów w kontenerze
+
+Checkout źródeł
+```bash
+git clone git@github.com:random-development/cli-client.git
+```
+
+Zbudowanie obrazu
+```bash
+cd cli-client
+sudo docker build -t python-cli-client-test -f Dockerfile.test .
+```
+
+Uruchomienie kontenera
+```bash
+sudo docker run python-cli-client-test
+```
+
+## Uruchomienie testów manualne
+```bash
+git clone git@github.com:random-development/cli-client.git
+cd cli-client
+python -m pytest tests/
 ```
 
 [FIXME: gatharing data task]: https://github.com/random-development/resources-monitoring-system/issues/40
