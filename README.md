@@ -2,8 +2,8 @@
 Program automatycznie przeszukujący monitorowane zasoby i pomiary w celu wyświetlenia (co pewien czas odświeżonych wyników dla) top 10 najbardziej obciążonych maszyn.
 
 # Możliwości cli-client
-- dostęp do API gateway oparty na mikrousłudze uwierzytelniającej [FIXME: gatharing data task]
-- może podłączyć się do kilku onitorów jednocześnie [FIXME: gatharing data task]
+- dostęp do API gateway oparty na mikrousłudze uwierzytelniającej [FIXME: auth microservice]
+- może podłączyć się do kilku monitorów jednocześnie [FIXME: gatharing data task]
 - uwzględnia zmiany (wykrywa dodanie nowych lub usunięcie istniejących maszyn z listy monitorowanych zasobów) [FIXME: gatharing data task]
 - wypisuje i co pewien czas odświeża top 10 najbardziej obciążonych maszyn [FIXME: printing data task]
 
@@ -24,7 +24,7 @@ sudo docker build -t python-cli-client .
 
 Uruchomienie kontenera
 ```bash
-sudo docker run -e ENDPOINT="<endpoint_url>" -e USERNAME="<username>" -e PASSWORD="<password>" python-cli-client
+sudo docker run -it -e ENDPOINT="<endpoint_url>" -e USERNAME="<username>" -e PASSWORD="<password>" -e DELAY=3 -e METRICS="cpu temp mem" python-cli-client
 ```
 
 ## Uruchomnienie aplikacji manualne
@@ -34,7 +34,7 @@ Checkout źródeł
 git clone git@github.com:random-development/cli-client.git
 ```
 
-Zbudowanie projektu
+Zbudowanie projektu (powinno się przed tym utworzyć [virtualenv])
 ```bash
 cd cli-client
 pip install .
@@ -42,7 +42,7 @@ pip install .
 
 Uruchomienie narzędzia
 ```bash
-./main.py --endpoint "<endpoint_url>" --username "<username>" --password "<password>" 
+./main.py --endpoint "<endpoint_url>" --username "<username>" --password "<password>" --delay 3 # delay time is optional
 ```
 
 # Testy jednostkowe (+ linter)
@@ -66,11 +66,17 @@ sudo docker run python-cli-client-test
 ```
 
 ## Uruchomienie testów manualne
+
+Powinno się przed tym utworzyć [virtualenv].
+
 ```bash
 git clone git@github.com:random-development/cli-client.git
 cd cli-client
 python -m pytest tests/
+pylint cli_client --disable=fixme
 ```
 
 [FIXME: gatharing data task]: https://github.com/random-development/resources-monitoring-system/issues/40
 [FIXME: printing data task]: https://github.com/random-development/resources-monitoring-system/issues/39
+[FIXME: auth microservice]: https://github.com/random-development/resources-monitoring-system/issues/49
+[virtualenv]: https://docs.python-guide.org/dev/virtualenvs/#basic-usage

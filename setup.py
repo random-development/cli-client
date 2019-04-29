@@ -9,4 +9,9 @@ setup(
     author='Anna Bogusz',
     author_email='ania_bogusz@wp.pl',
     url='https://github.com/random-development/cli-client',
-    packages=['cli_client'])
+    packages=['cli_client'],
+    install_requires=[
+        'asyncio',
+        'aiohttp',
+        'prettytable',
+        'huepy'])
