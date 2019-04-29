@@ -1,0 +1,6 @@
+FROM python:3.7
+
+ADD . /cli_client/
+RUN pip install /cli_client/
+RUN pip install pytest
+CMD python -m pytest /cli_client/tests/ -v
