@@ -11,13 +11,15 @@ LOGGER = logging.getLogger('api_gateway')
 
 def get_token(username, password): #pylint: disable=unused-argument
     #FIXME: #49 Get token from auth microservice using user&pass
+    print(username + " " + password)
+
     return 'eloelo320'
 
 async def get_data_from_endpoint(endpoint, _):
     #FIXME: #49 Implement using token during http connection
     async with aiohttp.ClientSession() as session:
         async with session.get(endpoint) as response:
-            return await response.text()
+            return await response.json()
 
 async def get_data(endpoint, token):
     metrics_endpoint = parse.urljoin(endpoint, "metrics")

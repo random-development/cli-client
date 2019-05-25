@@ -42,21 +42,18 @@ def create_empty_table(metrics):
     table.reversesort = True
     return table
 
-def create_table_with_data(metrics, data): #pylint: disable=unused-argument
+def create_table_with_data(metrics, datas): #pylint: disable=unused-argument
     table = create_empty_table(metrics)
-    #FIXME: #39 It should be fullfilled with real data given in form:
-    # [[MONITOR, RESOURCE, {metric1: value1, metric2: value2}]]
-    table.add_row([
-        "monitor-jeden",
-        "resourceName0",
-        *[70.0000000003 for _ in metrics],
-        "cpu,mem,temp"])
-    table.add_row([
-        "monitor-jeden",
-        "resourceName1",
-        *[-1.0000000003 for _ in metrics],
-        "mem,temp"])
-    #EMXIF
+
+    for data in datas:
+        table.add_row([
+            data["resourceName"],
+            data["name"],
+            data["type"],
+            data["lastValue"],
+            data["time"]]
+        )
+
     return table
 
 async def print_data(metrics, data=None):
@@ -66,4 +63,4 @@ async def print_data(metrics, data=None):
         table = create_table_with_data(metrics, data)
     clear_screen(os.name)
     print_title(metrics[0])
-    print_table(table)
+    #print(table)
