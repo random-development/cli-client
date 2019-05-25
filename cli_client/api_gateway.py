@@ -11,8 +11,6 @@ LOGGER = logging.getLogger('api_gateway')
 
 def get_token(username, password): #pylint: disable=unused-argument
     #FIXME: #49 Get token from auth microservice using user&pass
-    print(username + " " + password)
-
     return 'eloelo320'
 
 async def get_data_from_endpoint(endpoint, _):

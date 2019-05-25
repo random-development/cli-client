@@ -51,8 +51,7 @@ def create_table_with_data(metrics, datas): #pylint: disable=unused-argument
             data["name"],
             data["type"],
             data["lastValue"],
-            data["time"]]
-        )
+            data["time"]])
 
     return table
 
