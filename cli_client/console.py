@@ -63,4 +63,4 @@ async def print_data(metrics, data=None):
         table = create_table_with_data(metrics, data)
     clear_screen(os.name)
     print_title(metrics[0])
-    #print(table)
+    print(table)
