@@ -18,7 +18,8 @@ def clear_screen(ver):
         _ = os.system('clear')
 
 def print_title(metric, gateway_time):
-    print(CURSOR_0_0 + f"{time.ctime()} (API Gateway response from {gateway_time}) - Top for '{metric}' metric")
+    print(f"{CURSOR_0_0}{time.ctime()} (API Gateway response from {gateway_time})"
+          f" - Top for '{metric}' metric")
 
 def print_table(table):
     full_table_string = table.get_string(start=0, end=10).split(os.linesep)
