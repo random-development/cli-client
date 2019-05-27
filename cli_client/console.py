@@ -17,8 +17,8 @@ def clear_screen(ver):
     else:
         _ = os.system('clear')
 
-def print_title(metric):
-    print(CURSOR_0_0 + f"{time.ctime()} - Top for '{metric}' metric")
+def print_title(metric, gateway_time):
+    print(CURSOR_0_0 + f"{time.ctime()} (API Gateway response from {gateway_time}) - Top for '{metric}' metric")
 
 def print_table(table):
     full_table_string = table.get_string(start=0, end=10).split(os.linesep)
@@ -44,22 +44,20 @@ def create_empty_table(metrics):
 
 def create_table_with_data(metrics, datas): #pylint: disable=unused-argument
     table = create_empty_table(metrics)
-
-    for data in datas:
-        table.add_row([
-            data["resourceName"],
-            data["name"],
-            data["type"],
-            data["lastValue"],
-            data["time"]])
-
+    #FIXME: #39 It should be fullfilled with real data given in form:
+    # [[MONITOR, RESOURCE, {metric1: value1, metric2: value2}]]
+    table.add_row([
+        "monitor-jeden",
+        "resourceName0",
+        *[-1.0 for _ in metrics],
+        "mem, temp"])
     return table
 
-async def print_data(metrics, data=None):
+async def print_data(metrics, data):
     table = create_empty_table(metrics)
-    if data:
-        LOGGER.debug("Fullfil table with data: %s", data)
-        table = create_table_with_data(metrics, data)
+    if data.data:
+        LOGGER.debug("Fullfil table with data: %s", data.data)
+        table = create_table_with_data(metrics, data.data)
     clear_screen(os.name)
-    print_title(metrics[0])
-    print(table)
+    print_title(metrics[0], data.time)
+    print_table(table)
