@@ -15,7 +15,7 @@ class TestConsole(unittest.TestCase):
 
     @mock.patch('sys.stdout', new_callable=io.StringIO)
     def test_print_title(self, sys_stdout_mock):
-        ccc.print_title(self.test_metric)
+        ccc.print_title(self.test_metric, 'test_time')
         self.assertTrue(self.test_metric in sys_stdout_mock.getvalue())
 
     @mock.patch('sys.stdout', new_callable=io.StringIO)
