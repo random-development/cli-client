@@ -2,6 +2,7 @@
 #pylint: disable=missing-docstring
 
 import sys
+import time
 import asyncio
 import argparse
 import logging
@@ -55,13 +56,26 @@ def main():
     args = get_args(sys.argv[1:])
 
     @periodic(args.delay)
-    async def main_loop(token):
-        data_to_print = await api_gateway.get_data(args.endpoint, token)
-        await console.print_data(args.metrics, data_to_print)
+    async def main_print_loop(data_to_print, metrics):
+        await console.print_data(metrics, data_to_print)
+
+    async def main_download_loop(data_to_update, token):
+        while True:
+            print("begin")
+            data_to_update.data = await api_gateway.get_data(args.endpoint, token)
+            data_to_update.time = time.ctime()
+
+    async def main_loop(username, password, metrics):
+        async_data = type('', (), {})()
+        async_data.data = {}
+        async_data.time = time.strftime('%a %b %d %H:%M:%S %Y', time.gmtime(0))
+        await asyncio.gather(
+            main_download_loop(
+                async_data,
+                api_gateway.get_token(username, password)),
+            main_print_loop(async_data, metrics))
 
     try:
-        asyncio.run(console.print_data(args.metrics)) # plot empty dashboard
-        asyncio.run(main_loop(
-            api_gateway.get_token(args.username, args.password)))
+        asyncio.run(main_loop(args.username, args.password, args.metrics))
     except KeyboardInterrupt:
         print("\n\nThank you for making this little program very happy.\n")
