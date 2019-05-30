@@ -22,9 +22,14 @@ cd cli-client
 sudo docker build -t python-cli-client .
 ```
 
-Uruchomienie kontenera
+Uruchomienie kontenera z domyslnymi parametrami
 ```bash
-sudo docker run -it -e ENDPOINT="<endpoint_url>" -e USERNAME="<username>" -e PASSWORD="<password>" -e DELAY=3 -e METRICS="cpu temp mem" python-cli-client
+sudo docker run -it python-cli-client
+```
+
+Uruchomienie kontenera ze zmienionymi parametrami
+```bash
+sudo docker run -it -e CLI_CLIENT_USER="<cli_client_user>" -e CLI_CLIENT_PASSWORD="<cli+client_password>" -e DATA_ENDPOINT="<data_endpoint_url>" -e AUTH_ENDPOINT="<auth_endpoint_url>" -e USERNAME="<username>" -e PASSWORD="<password>" -e DELAY=3 -e METRICS="cpu temp mem" python-cli-client
 ```
 
 ## Uruchomnienie aplikacji manualne
@@ -42,7 +47,12 @@ pip install .
 
 Uruchomienie narzędzia
 ```bash
-./main.py --endpoint "<endpoint_url>" --username "<username>" --password "<password>" --delay 3 # delay time is optional
+./main.py --data-endpoint "<data_endpoint_url>" --auth-endpoint "<auth_endpoint_url>" --username "<username>" --password "<password>" --delay 3 -m temp mem # delay time and metrics are optional
+```
+
+Przykladowe uzycie
+```bash
+CLI_CLIENT_USER=automatic-client CLI_CLIENT_PASSWORD=noonewilleverguess3 ./main.py  -e "http://hibron.usermd.net:5000/gateway-with-auth/" -a "http://hibron.usermd.net:7000/" -u enduser -p password -d 1 -m temp mem
 ```
 
 # Testy jednostkowe (+ linter)

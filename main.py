@@ -2,7 +2,7 @@
 
 import sys
 if sys.version_info < (3, 7):
-    sys.stderr.write("Sorry, this program requires Python 3.7\n")
+    sys.stderr.write("Error: Sorry, this program requires Python 3.7\n")
     sys.exit(1)
 
 import cli_client #pylint: disable=wrong-import-position
