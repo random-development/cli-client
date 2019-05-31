@@ -32,7 +32,7 @@ def print_table(table):
 
 def create_empty_table(metrics):
     table = prettytable.PrettyTable()
-    table.field_names = ["monitor", "resource", *metrics, "metrics"]
+    table.field_names = ["monitor", "resource", *metrics, "available_metrics"]
     table.border = False
     table.header = True
     table.float_format = ".1"
@@ -43,15 +43,14 @@ def create_empty_table(metrics):
     table.reversesort = True
     return table
 
-def create_table_with_data(metrics, datas): #pylint: disable=unused-argument
-    table = create_empty_table(metrics)
-    #FIXME: #39 It should be fullfilled with real data given in form:
-    # [[MONITOR, RESOURCE, {metric1: value1, metric2: value2}]]
-    table.add_row([
-        "monitor-jeden",
-        "resourceName0",
-        *[-1.0 for _ in metrics],
-        "mem, temp"])
+def create_table_with_data(metrics_labels, data):
+    table = create_empty_table(metrics_labels)
+    for resource, metrics in data.items():
+        table.add_row([
+            resource[0],
+            resource[1],
+            *[metrics.get(l, -1.0) for l in metrics_labels],
+            ", ".join(metrics)])
     return table
 
 async def print_data(metrics, data):

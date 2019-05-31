@@ -12,6 +12,10 @@ class TestConsole(unittest.TestCase):
     test_metric = 'hello my metric'
     test_empty_data = ""
     test_data = "this is header\nfirst line\nsecond line"
+    test_real_data = {
+        ('komp_zepsuty', 'hostName'): {'cpu': 50},
+        ('komp_zepsuty', 'hostName2'): {'temp': 99, 'cpu': 99}}
+    test_real_metrics = ['cpu', 'temp', 'elo']
 
     @mock.patch('sys.stdout', new_callable=io.StringIO)
     def test_print_title(self, sys_stdout_mock):
@@ -33,3 +37,9 @@ class TestConsole(unittest.TestCase):
         for line in self.test_data.split('\n'):
             with self.subTest(line=line):
                 self.assertTrue(line in sys_stdout_mock.getvalue())
+
+    def test_create_table_with_data(self):
+        table = ccc.create_table_with_data(
+            self.test_real_metrics,
+            self.test_real_data)
+        self.assertEqual(len(table._rows), 2) #pylint: disable=protected-access
