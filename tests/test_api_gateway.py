@@ -39,6 +39,50 @@ class TestApiGateway(unittest.TestCase):
         with self.assertRaisesRegex(SystemExit, "3"):
             ag.check_status(test_response, test_status)
 
+class TestGatherRecords(unittest.TestCase):
+
+    test_data_from_endpoint = [
+        {
+            "name": "hostName",
+            "resourceName": "komp_zepsuty",
+            "type": "cpu",
+            "lastValue": 50,
+            "time": 1554663619,
+            "timeData": [1554663615, 1554663616, 1554663617, 1554663618, 1554663619],
+            "valueData": [213, 214, 215, 264, 214]
+        },
+        {
+            "name": "hostName2",
+            "resourceName": "komp_zepsuty",
+            "type": "temp",
+            "lastValue": 99,
+            "time": 1554643619,
+            "timeData": [1554643615, 1554643616, 1554643617, 1554643618, 1554643619],
+            "valueData": [78, 88, 97, 98, 99]
+        },
+        {
+            "name": "hostName2",
+            "resourceName": "komp_zepsuty",
+            "type": "cpu",
+            "lastValue": 99,
+            "time": 1554643619,
+            "timeData": [1554643615, 1554643616, 1554643617, 1554643618, 1554643619],
+            "valueData": [78, 88, 97, 98, 99]
+        }
+    ]
+
+    def test_same_monitors(self):
+        records = ag.gather_records(self.test_data_from_endpoint)
+        self.assertEqual(len(records), 2)
+
+    def test_metrics(self):
+        records = ag.gather_records(self.test_data_from_endpoint)
+        for metric, test_case in {'cpu': 2, 'temp': 1, 'elo': 0}.items():
+            with self.subTest(metric=metric):
+                self.assertEqual(
+                    sum(1 for resource in records.values() if resource.get(metric) is not None),
+                    test_case)
+
 @pytest.mark.asyncio
 async def test_get_token():
     endpoint = 'http://hibron.usermd.net:7000'
