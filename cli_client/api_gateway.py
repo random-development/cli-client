@@ -51,13 +51,19 @@ def check_status(response, status):
         sys.exit(3)
     return response, status
 
+def gather_records(raw_data):
+    proceeded_records = {}
+    for record in raw_data:
+        proceeded_records.setdefault(
+            (record['resourceName'], record['name']),
+            {})[record['type']] = record['lastValue']
+    return proceeded_records
+
 async def get_data(data_endpoint, auth_endpoint, user_username, user_password, token=None):
     metrics_endpoint = parse.urljoin(data_endpoint, "metrics")
     LOGGER.info("Gathering data from endpoint '%s'", metrics_endpoint)
-    #FIXME: #40 Gather all records in form:
-    # [[MONITOR, RESOURCE, {metric1: value1, metric2: value2}]] and return them
     response, status = await get_data_from_endpoint(metrics_endpoint, token)
     if status == 401: # need to generate new token
         token = await get_token(auth_endpoint, user_username, user_password)
-        return check_status(*(await get_data_from_endpoint(metrics_endpoint, token)))[0], token
-    return response, token
+        response = check_status(*(await get_data_from_endpoint(metrics_endpoint, token)))[0]
+    return gather_records(response), token
