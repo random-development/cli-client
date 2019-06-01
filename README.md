@@ -2,12 +2,41 @@
 Program automatycznie przeszukujący monitorowane zasoby i pomiary w celu wyświetlenia (co pewien czas odświeżonych wyników dla) top 10 najbardziej obciążonych maszyn.
 
 # Możliwości cli-client
-- dostęp do API gateway oparty na mikrousłudze uwierzytelniającej [FIXME: auth microservice]
-- może podłączyć się do kilku monitorów jednocześnie [FIXME: gatharing data task]
-- uwzględnia zmiany (wykrywa dodanie nowych lub usunięcie istniejących maszyn z listy monitorowanych zasobów) [FIXME: gatharing data task]
-- wypisuje i co pewien czas odświeża top 10 najbardziej obciążonych maszyn [FIXME: printing data task]
+- Dostęp do API gateway oparty na mikrousłudze uwierzytelniającej.
+- Może podłączyć się do kilku monitorów jednocześnie (za pomocą resource `/metrics` API Gateway); przy tym uwzględnia zmiany (wykrywa dodanie nowych lub usunięcie istniejących maszyn z listy monitorowanych zasobów).
+- Wypisuje i co pewien czas (ok. 1 min.) odświeża top 10 najbardziej obciążonych maszyn.
 
 # Instalacja i uruchomienie cli-client
+
+## Opis parametrów
+```bash
+$ ./main.py --help
+usage: main.py [-h] -e DATA_ENDPOINT -a AUTH_ENDPOINT -u USERNAME -p PASSWORD               [-d DELAY] [-m METRICS [METRICS ...]]
+
+CLI for monitoring resources.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -e DATA_ENDPOINT, --data-endpoint DATA_ENDPOINT
+                        Enpoint for gathering monitoring data.
+  -a AUTH_ENDPOINT, --auth-endpoint AUTH_ENDPOINT
+                        Enpoint for authentication microservice.
+  -u USERNAME, --username USERNAME
+                        Username for API Gateway authentication.
+  -p PASSWORD, --password PASSWORD
+                        Password for API Gateway authentication.
+  -d DELAY, --delay DELAY
+                        Delay time (default 2 sec).
+  -m METRICS [METRICS ...], --metrics METRICS [METRICS ...]
+                        Metrics to show - space separated list. First element
+                        defines key for sorting to display top resources
+                        (default cpu).
+```
+
+Dodatkowo warto pamiętać, że:
+- `DELAY` - jest parametrem periodycznego odświeżania dashboadu (tabeli), natomiast pobieranie dzieje się w osobnej korutynie w pętli.
+- `METRICS` - pierwsza metryka w liście jest parametrem sortowania "top"
+- `USERNAME`, `PASSOWRD` - stanowią dane użytkownika
 
 ## Uruchomnienie aplikacji w kontenerze
 
@@ -27,9 +56,14 @@ Uruchomienie kontenera z domyslnymi parametrami
 sudo docker run -it python-cli-client
 ```
 
-Uruchomienie kontenera ze zmienionymi parametrami
+Uruchomienie kontenera ze zmienionymi parametrami (należy pamiętać o podaniu końcowych znaków `/` w przypadku definiowania endpointów)
 ```bash
-sudo docker run -it -e CLI_CLIENT_USER="<cli_client_user>" -e CLI_CLIENT_PASSWORD="<cli+client_password>" -e DATA_ENDPOINT="<data_endpoint_url>" -e AUTH_ENDPOINT="<auth_endpoint_url>" -e USERNAME="<username>" -e PASSWORD="<password>" -e DELAY=3 -e METRICS="cpu temp mem" python-cli-client
+sudo docker run -it -e CLI_CLIENT_USER="<cli_client_user>" -e CLI_CLIENT_PASSWORD="<cli+client_password>" -e DATA_ENDPOINT="<data_endpoint_url>" -e AUTH_ENDPOINT="<auth_endpoint_url>" -e USERNAME="<username>" -e PASSWORD="<password>" -e DELAY=10 -e METRICS="<metrics_list>" python-cli-client
+```
+
+Przykładowe uruchomienie ze zmienionymi parametrami
+```bash
+sudo docker run -it -e CLI_CLIENT_USER="automatic-client" -e CLI_CLIENT_PASSWORD="noonewilleverguess3" -e DATA_ENDPOINT="http://hibron.usermd.net:5000/gateway-with-auth/" -e AUTH_ENDPOINT="http://hibron.usermd.net:7000/" -e USERNAME="enduser" -e PASSWORD="password" -e DELAY=10 -e METRICS="metricName0 metricName1" python-cli-client
 ```
 
 ## Uruchomnienie aplikacji manualne
@@ -45,15 +79,23 @@ cd cli-client
 pip install .
 ```
 
-Uruchomienie narzędzia
+Uruchomienie narzędzia (tu oprócz parametrów należy pamiętać o ustawieniu zmiennych `CLI_CLIENT_USER` oraz `CLI_CLIENT_PASSWORD` do autoryzacji aplikacji)
 ```bash
 ./main.py --data-endpoint "<data_endpoint_url>" --auth-endpoint "<auth_endpoint_url>" --username "<username>" --password "<password>" --delay 3 -m temp mem # delay time and metrics are optional
 ```
 
-Przykladowe uzycie
+Przykladowe użycie
 ```bash
-CLI_CLIENT_USER=automatic-client CLI_CLIENT_PASSWORD=noonewilleverguess3 ./main.py  -e "http://hibron.usermd.net:5000/gateway-with-auth/" -a "http://hibron.usermd.net:7000/" -u enduser -p password -d 1 -m temp mem
+CLI_CLIENT_USER=automatic-client CLI_CLIENT_PASSWORD=noonewilleverguess3 ./main.py  -e "http://hibron.usermd.net:5000/gateway-with-auth/" -a "http://hibron.usermd.net:7000/" -u enduser -p password -d 1 -m metricName0 metricName1
 ```
+
+# Widok dashboardu
+
+Przy oczekiwaniu na dane
+![init dashboard](https://i.imgur.com/0oYCyv5.png "Init dashboard")
+
+Po pobraniu danych (ok. 1 min) top 10 dla metryki `metricName0`
+![data dashboard](https://imgur.com/3NG7iFo.png "Data dashboard")
 
 # Testy jednostkowe (+ linter)
 
