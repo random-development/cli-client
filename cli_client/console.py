@@ -32,7 +32,7 @@ def print_table(table):
 
 def create_empty_table(metrics):
     table = prettytable.PrettyTable()
-    table.field_names = ["monitor", "resource", *metrics, "available_metrics"]
+    table.field_names = ["monitor", "resource", *metrics]
     table.border = False
     table.header = True
     table.float_format = ".1"
@@ -49,8 +49,7 @@ def create_table_with_data(metrics_labels, data):
         table.add_row([
             resource[0],
             resource[1],
-            *[metrics.get(l, -1.0) for l in metrics_labels],
-            ", ".join(metrics)])
+            *[metrics.get(l, -1.0) for l in metrics_labels]])
     return table
 
 async def print_data(metrics, data):
