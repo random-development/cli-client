@@ -14,11 +14,13 @@ class TestInit(unittest.TestCase):
         parser = cli_client.get_args([
             "-e",
             self.test_endpoint,
+            "-a",
+            self.test_endpoint,
             "-u",
             self.test_username,
             "-p",
             self.test_password])
-        self.assertTrue(parser.endpoint, self.test_endpoint)
+        self.assertTrue(parser.data_endpoint, self.test_endpoint)
 
     @mock.patch("sys.exit")
     def test_get_args_incomplete_args(self, sys_exit_mock):

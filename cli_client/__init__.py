@@ -14,9 +14,14 @@ def get_args(args):
         description="CLI for monitoring resources.")
     parser.add_argument(
         "-e",
-        "--endpoint",
+        "--data-endpoint",
         required=True,
         help="Enpoint for gathering monitoring data.")
+    parser.add_argument(
+        "-a",
+        "--auth-endpoint",
+        required=True,
+        help="Enpoint for authentication microservice.")
     parser.add_argument(
         "-u",
         "--username",
@@ -59,10 +64,11 @@ def main():
     async def main_print_loop(data_to_print, metrics):
         await console.print_data(metrics, data_to_print)
 
-    async def main_download_loop(data_to_update, token):
+    async def main_download_loop(data_to_update, user_username, user_password):
+        token = None
         while True:
-            print("begin")
-            data_to_update.data = await api_gateway.get_data(args.endpoint, token)
+            data_to_update.data, token = await api_gateway.get_data(
+                args.data_endpoint, args.auth_endpoint, user_username, user_password, token)
             data_to_update.time = time.ctime()
 
     async def main_loop(username, password, metrics):
@@ -72,7 +78,7 @@ def main():
         await asyncio.gather(
             main_download_loop(
                 async_data,
-                api_gateway.get_token(username, password)),
+                username, password),
             main_print_loop(async_data, metrics))
 
     try:
