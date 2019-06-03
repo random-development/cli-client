@@ -2,8 +2,8 @@ FROM python:3.7
 
 ENV CLI_CLIENT_USER "automatic-client"
 ENV CLI_CLIENT_PASSWORD "noonewilleverguess3"
-ENV DATA_ENDPOINT "http://hibron.usermd.net:5000/gateway-with-auth/"
-ENV AUTH_ENDPOINT "http://hibron.usermd.net:7000/"
+ENV DATA_ENDPOINT "http://localhost:5000/gateway-with-auth/"
+ENV AUTH_ENDPOINT "http://localhost:7000/"
 ENV USERNAME "enduser"
 ENV PASSWORD "password"
 ENV DELAY 2

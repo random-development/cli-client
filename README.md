@@ -63,7 +63,7 @@ sudo docker run -it -e CLI_CLIENT_USER="<cli_client_user>" -e CLI_CLIENT_PASSWOR
 
 Przykładowe uruchomienie ze zmienionymi parametrami
 ```bash
-sudo docker run -it -e CLI_CLIENT_USER="automatic-client" -e CLI_CLIENT_PASSWORD="noonewilleverguess3" -e DATA_ENDPOINT="http://hibron.usermd.net:5000/gateway-with-auth/" -e AUTH_ENDPOINT="http://hibron.usermd.net:7000/" -e USERNAME="enduser" -e PASSWORD="password" -e DELAY=10 -e METRICS="metricName0 metricName1" python-cli-client
+sudo docker run -it -e CLI_CLIENT_USER="automatic-client" -e CLI_CLIENT_PASSWORD="noonewilleverguess3" -e DATA_ENDPOINT="http://localhost:5000/gateway-with-auth/" -e AUTH_ENDPOINT="http://localhost:7000/" -e USERNAME="enduser" -e PASSWORD="password" -e DELAY=10 -e METRICS="metricName0 metricName1" python-cli-client
 ```
 
 ## Uruchomnienie aplikacji manualne
@@ -86,7 +86,7 @@ Uruchomienie narzędzia (tu oprócz parametrów należy pamiętać o ustawieniu 
 
 Przykladowe użycie
 ```bash
-CLI_CLIENT_USER=automatic-client CLI_CLIENT_PASSWORD=noonewilleverguess3 ./main.py  -e "http://hibron.usermd.net:5000/gateway-with-auth/" -a "http://hibron.usermd.net:7000/" -u enduser -p password -d 1 -m metricName0 metricName1
+CLI_CLIENT_USER=automatic-client CLI_CLIENT_PASSWORD=noonewilleverguess3 ./main.py  -e "http://localhost:5000/gateway-with-auth/" -a "http://localhost:7000/" -u enduser -p password -d 1 -m metricName0 metricName1
 ```
 
 # Widok dashboardu

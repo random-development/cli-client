@@ -85,7 +85,7 @@ class TestGatherRecords(unittest.TestCase):
 
 @pytest.mark.asyncio
 async def test_get_token():
-    endpoint = 'http://hibron.usermd.net:7000'
+    endpoint = 'http://localhost:7000'
     username = 'enduser'
     password = 'password'
     cli_username = 'automatic-client'
@@ -98,7 +98,7 @@ async def test_get_token():
                 check_status_mock.return_value = ({'access_token': 'test'}, 'tmp')
                 await ag.get_token(endpoint, username, password)
                 send_request_mock.assert_called_once_with(
-                    f'http://{cli_username}:{cli_password}@hibron.usermd.net:7000/oauth/token'
+                    f'http://{cli_username}:{cli_password}@localhost:7000/oauth/token'
                     f'?grant_type=password&username={username}&password={password}',
                     ag.aiohttp.ClientSession.post)
 
